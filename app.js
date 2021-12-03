@@ -48,10 +48,12 @@ class Bd{
     let id = localStorage.getItem('id');
     for(let i = 1; i <= id; i++){
       let despesa = JSON.parse(localStorage.getItem(i));
+
       //console.log(i, despesa);
       if(despesa===null){
         continue
       }
+      despesa.id = i;
       despesas.push(despesa);
 
     }
@@ -101,6 +103,10 @@ class Bd{
     }
     return despesasFiltradas
 
+  }
+
+  remover(id){
+    localStorage.removeItem(id);
   }
 }
 
@@ -153,15 +159,15 @@ function cadastrarDespesa(){
 
 }
 
-function carregaListaDespesas(despesas = Array()){
+function carregaListaDespesas(despesas = Array(), filtro = false){
 
-  if(despesas.length == 0){
+  if(despesas.length == 0 && filtro ==  false){
   
     despesas = bd.recuperarTodosRegistros();  
   }
 
 
-
+  //selecionando o elemento tbody da tabela
   let listaDespesas = document.getElementById('listaDespesas');
   listaDespesas.innerHTML = '';
 
@@ -186,6 +192,20 @@ function carregaListaDespesas(despesas = Array()){
     linha.insertCell(2).innerHTML = d.descricao;
     linha.insertCell(3).innerHTML = d.valor;
 
+    //criar o botao de excluir
+    let btn = document.createElement("button");
+    btn.className = 'btn btn-danger';
+    btn.innerHTML = '<i class="fas fa-times"></i>';
+    btn.id = 'id_despesa_'+d.id;
+    btn.onclick = function() {
+      
+      let id = this.id.replace('id_despesa_','');
+      bd.remover(id);
+      window.location.reload;
+    };
+    linha.insertCell(4).append(btn);
+    
+
   })
 }
 
@@ -200,7 +220,7 @@ function pesquisarDespesa(){
   
   let despesas = bd.pesquisar(despesa);
 
-  this.carregaListaDespesas(despesas);
+  this.carregaListaDespesas(despesas, true);
 
 
   
