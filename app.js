@@ -201,8 +201,8 @@ function carregaListaDespesas(despesas = Array(), filtro = false){
       
       let id = this.id.replace('id_despesa_','');
       bd.remover(id);
-      window.location.reload;
-    };
+      window.location.reload();
+     };
     linha.insertCell(4).append(btn);
     
 
